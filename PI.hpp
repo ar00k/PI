@@ -1,32 +1,19 @@
-#ifndef PI_H
-#define PI_H
+#ifndef PI_HPP
+#define PI_HPP
 
 #include <vector>
 #include <thread>
-#include <atomic>
-#include <chrono>
 
 class PI {
-    private:
-    // Liczba podziałów przedziału
-    unsigned long long numDivisions;
-    // Liczba wątków
-    unsigned int numThreads;
-    // Wynik końcowy (częściowe wyniki z wątków)
-    std::atomic<double> result;
-
-    // Funkcja dla wątku: obliczanie części całki
-    void calculatePartial(unsigned long long start, unsigned long long end);
-
     public:
-    // Konstruktor
-    PI(unsigned long long numDivisions, unsigned int numThreads);
+    PI(long long numDivisions, int numThreads);
+    double computePI();
 
-    // Funkcja obliczająca PI
-    double calculate();
+    private:
+    long long numDivisions;
+    int numThreads;
 
-    // Funkcja pomiaru czasu obliczeń
-    double measureExecutionTime(double& piResult);
+    void calculatePartialPI(int threadId, std::vector<double>& partialResults);
 };
 
-#endif // PI_H
+#endif // PI_HPP
