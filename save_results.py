@@ -70,17 +70,19 @@ def save_results_to_excel(results, filename="results.xlsx"):
 
 def main():
     # Konfiguracja testów
-    num_divisions = 1_000_000_000  # Liczba podziałów przedziału całki
+    divisions_list = [100000000, 1000000000, 3000000000]  # Lista różnych ilości podziałów
     max_threads = 50  # Maksymalna liczba rdzeni (wątków)
     results = []
 
-    for num_threads in range(1, max_threads + 1):
-        print(f"Uruchamianie dla {num_threads} rdzeni...")
-        exec_time = measure_execution_time(num_divisions, num_threads)
-        if exec_time is not None:
-            results.append((num_threads, exec_time, num_divisions))
-        else:
-            print(f"Pomiar dla {num_threads} rdzeni nie powiódł się.")
+    # Testujemy dla różnych ilości podziałów
+    for num_divisions in divisions_list:
+        for num_threads in range(1, max_threads + 1):
+            print(f"Uruchamianie dla {num_threads} rdzeni i {num_divisions} podziałów...")
+            exec_time = measure_execution_time(num_divisions, num_threads)
+            if exec_time is not None:
+                results.append((num_threads, exec_time, num_divisions))
+            else:
+                print(f"Pomiar dla {num_threads} rdzeni i {num_divisions} podziałów nie powiódł się.")
 
     # Zapisujemy wyniki do Excela
     save_results_to_excel(results)
