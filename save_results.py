@@ -1,47 +1,86 @@
-import openpyxl
+import subprocess
 import time
+import openpyxl
 
-# Funkcja zapisująca dane do pliku Excel
-def save_to_excel(data, filename="wyniki.xlsx"):
-    # Tworzymy nowy skoroszyt
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Wyniki"
+def measure_execution_time(num_divisions, num_threads):
+    """
+    Uruchamia program w C++ i mierzy czas wykonania.
+
+    Args:
+        num_divisions (int): Liczba podziałów przedziału całki.
+        num_threads (int): Liczba wątków.
+
+    Returns:
+        float: Czas wykonania programu w sekundach.
+    """
+    try:
+        # Uruchamianie programu w C++ z odpowiednimi argumentami
+        start_time = time.time()
+        result = subprocess.run(
+            ['./PI', str(num_divisions), str(num_threads)],
+            capture_output=True,
+            text=True
+        )
+        end_time = time.time()
+        
+        # Sprawdzamy, czy program wykonał się poprawnie
+        if result.returncode != 0:
+            print(f"Błąd wykonania programu dla {num_threads} wątków.")
+            print("Szczegóły błędu:", result.stderr)
+            return None
+        
+        # Wyświetlamy wyjście programu (opcjonalnie)
+        print(result.stdout)
+
+        # Zwracamy czas wykonania
+        return end_time - start_time
+    except Exception as e:
+        print(f"Błąd podczas uruchamiania programu: {e}")
+        return None
+
+
+def save_results_to_excel(results, filename="results.xlsx"):
+    """
+    Zapisuje wyniki do pliku Excel.
+
+    Args:
+        results (list of tuples): Lista wyników w formacie (num_threads, time, num_divisions).
+        filename (str): Nazwa pliku Excela.
+    """
+    # Tworzymy nowy arkusz Excel
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = "Wyniki"
 
     # Dodajemy nagłówki
-    ws.append(["Ilość wątków", "Czas wykonania (sekundy)", "Liczba podziałów"])
+    sheet.append(["Liczba Wątków", "Czas Wykonania (s)", "Liczba Podziałów"])
 
-    # Dodajemy dane
-    for row in data:
-        ws.append(row)
+    # Wpisujemy dane
+    for num_threads, exec_time, num_divisions in results:
+        sheet.append([num_threads, exec_time, num_divisions])
 
-    # Zapisujemy plik Excel
-    wb.save(filename)
+    # Zapisujemy do pliku
+    workbook.save(filename)
+    print(f"Wyniki zapisane do pliku: {filename}")
 
-# Przykładowe dane (ilość wątków, czas wykonania, liczba podziałów)
-# Zmienna 'data' będzie przechowywać dane, które później zapisujemy do pliku Excel
-data = []
 
-# Testowanie różnych ilości wątków
-for num_threads in range(1, 6):  # Testujemy od 1 do 5 wątków
-    num_divisions = 1000000000  # Liczba podziałów przedziału całki
-    
-    # Mierzymy czas obliczeń
-    start_time = time.time()
+def main():
+    # Konfiguracja testów
+    num_divisions = 1_000_000_000  # Liczba podziałów przedziału całki
+    max_threads = 50  # Maksymalna liczba wątków
+    results = []
 
-    # Wywołanie programu C++ (tutaj wstawiamy czasowo symulację obliczeń)
-    # Zakładając, że `PI::computePI()` działa w ciągu 1 sekundy na jeden wątek
-    # W rzeczywistości wywołać C++ program w sposób zintegrowany, np. poprzez subprocess
-    
-    # Symulacja
-    time.sleep(0.5 * num_threads)  # symulacja opóźnienia w zależności od liczby wątków
-    
-    end_time = time.time()
-    execution_time = end_time - start_time
+    for num_threads in range(1, max_threads + 1):
+        print(f"Uruchamianie dla {num_threads} wątków...")
+        exec_time = measure_execution_time(num_divisions, num_threads)
+        if exec_time is not None:
+            results.append((num_threads, exec_time, num_divisions))
+        else:
+            print(f"Pomiar dla {num_threads} wątków nie powiódł się.")
 
-    # Dodajemy dane do listy
-    data.append([num_threads, execution_time, num_divisions])
+    # Zapisujemy wyniki do Excela
+    save_results_to_excel(results)
 
-# Zapisujemy dane do pliku Excel
-save_to_excel(data)
-print("Dane zostały zapisane do pliku wyniki.xlsx")
+
+if __name__ == "__main__":
+    main()
