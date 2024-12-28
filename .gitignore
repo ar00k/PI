@@ -103,3 +103,4 @@ docs/
 dokumentacja/
 *.pdf
 *.txt
+myenv/
