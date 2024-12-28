@@ -1,6 +1,7 @@
 import subprocess
 import time
 import openpyxl
+import platform
 
 def measure_execution_time(num_divisions, num_threads):
     """
@@ -8,16 +9,19 @@ def measure_execution_time(num_divisions, num_threads):
 
     Args:
         num_divisions (int): Liczba podziałów przedziału całki.
-        num_threads (int): Liczba wątków.
+        num_threads (int): Liczba rdzeni (wątków).
 
     Returns:
         float: Czas wykonania programu w sekundach.
     """
     try:
+        # Ustalanie nazwy pliku wykonywalnego w zależności od systemu operacyjnego
+        exe_name = "output.exe" if platform.system() == "Windows" else "./output.out"
+
         # Uruchamianie programu w C++ z odpowiednimi argumentami
         start_time = time.time()
         result = subprocess.run(
-            ['./PI', str(num_divisions), str(num_threads)],
+            [exe_name, str(num_divisions), str(num_threads)],
             capture_output=True,
             text=True
         )
@@ -25,7 +29,7 @@ def measure_execution_time(num_divisions, num_threads):
         
         # Sprawdzamy, czy program wykonał się poprawnie
         if result.returncode != 0:
-            print(f"Błąd wykonania programu dla {num_threads} wątków.")
+            print(f"Błąd wykonania programu dla {num_threads} rdzeni.")
             print("Szczegóły błędu:", result.stderr)
             return None
         
@@ -53,7 +57,7 @@ def save_results_to_excel(results, filename="results.xlsx"):
     sheet.title = "Wyniki"
 
     # Dodajemy nagłówki
-    sheet.append(["Liczba Wątków", "Czas Wykonania (s)", "Liczba Podziałów"])
+    sheet.append(["Liczba Rdzeni", "Czas Wykonania (s)", "Liczba Podziałów"])
 
     # Wpisujemy dane
     for num_threads, exec_time, num_divisions in results:
@@ -67,16 +71,16 @@ def save_results_to_excel(results, filename="results.xlsx"):
 def main():
     # Konfiguracja testów
     num_divisions = 1_000_000_000  # Liczba podziałów przedziału całki
-    max_threads = 50  # Maksymalna liczba wątków
+    max_threads = 50  # Maksymalna liczba rdzeni (wątków)
     results = []
 
     for num_threads in range(1, max_threads + 1):
-        print(f"Uruchamianie dla {num_threads} wątków...")
+        print(f"Uruchamianie dla {num_threads} rdzeni...")
         exec_time = measure_execution_time(num_divisions, num_threads)
         if exec_time is not None:
             results.append((num_threads, exec_time, num_divisions))
         else:
-            print(f"Pomiar dla {num_threads} wątków nie powiódł się.")
+            print(f"Pomiar dla {num_threads} rdzeni nie powiódł się.")
 
     # Zapisujemy wyniki do Excela
     save_results_to_excel(results)

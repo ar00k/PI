@@ -1,39 +1,39 @@
 #include <iostream>
+#include <chrono>
 #include <cmath>
 #include <vector>
 #include "PI.hpp"
 
-
-#include <iostream>
-#include <cmath>
-
-
-// Konstruktor klasy PI
 PI::PI(long long numDivisions, int numThreads)
     : numDivisions(numDivisions), numThreads(numThreads) {
 }
 
-// Metoda obliczająca wartość liczby PI
 double PI::computePI() {
-    // Tablica na wyniki częściowe obliczone przez każdy wątek
+    // Mierzenie czasu
+    auto start = std::chrono::high_resolution_clock::now();
+
     std::vector<double> partialResults(numThreads, 0.0);
     std::vector<std::thread> threads;
 
-    // Rozpoczynamy wątki
     for (int i = 0; i < numThreads; ++i) {
         threads.emplace_back(&PI::calculatePartialPI, this, i, std::ref(partialResults));
     }
 
-    // Czekamy na zakończenie pracy wszystkich wątków
     for (auto& thread : threads) {
         thread.join();
     }
 
-    // Sumowanie wyników z wszystkich wątków
     double totalResult = 0.0;
     for (const auto& partial : partialResults) {
         totalResult += partial;
     }
+
+    // Mierzenie końca czasu
+    auto end = std::chrono::high_resolution_clock::now();
+
+    // Obliczanie różnicy czasowej
+    std::chrono::duration<double> duration = end - start;
+    std::cout << "Czas obliczeń (w C++): " << duration.count() << " sekund" << std::endl;
 
     return totalResult;
 }
