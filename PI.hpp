@@ -6,7 +6,7 @@
 #include <atomic>
 #include <chrono>
 
-class PiCalculator {
+class PI {
     private:
     // Liczba podziałów przedziału
     unsigned long long numDivisions;
@@ -20,7 +20,7 @@ class PiCalculator {
 
     public:
     // Konstruktor
-    PiCalculator(unsigned long long numDivisions, unsigned int numThreads);
+    PI(unsigned long long numDivisions, unsigned int numThreads);
 
     // Funkcja obliczająca PI
     double calculate();
