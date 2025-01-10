@@ -33,7 +33,7 @@ double PI::computePI() {
 
     // Obliczanie różnicy czasowej
     std::chrono::duration<double> duration = end - start;
-    std::cout << "Czas obliczeń (w C++): " << duration.count() << " sekund" << std::endl;
+    std::cout << "Czas obliczen (w C++): " << duration.count() << " sekund" << std::endl;
 
     return totalResult;
 }

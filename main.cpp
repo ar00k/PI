@@ -6,7 +6,7 @@
 int main(int argc, char* argv[]) {
     // Sprawdzamy, czy podano wystarczającą liczbę argumentów
     if (argc < 3) {
-        std::cerr << "Użycie: " << argv[0] << " <numDivisions> <numThreads>" << std::endl;
+        std::cerr << "Uzycie: " << argv[0] << " <numDivisions> <numThreads>" << std::endl;
         return 1; // Kod błędu
     }
 
