@@ -6,38 +6,38 @@
 
 /**
  * @class PI
- * @brief A class to compute the value of PI using multiple threads.
+ * @brief Klasa do obliczania wartości PI za pomocą wielu wątków.
  *
- * This class provides functionality to compute the value of PI by dividing the
- * computation into multiple divisions and using multiple threads to perform the
- * calculations in parallel.
+ * Ta klasa zapewnia funkcjonalność obliczania wartości PI poprzez podzielenie
+ * obliczeń na wiele podziałów i użycie wielu wątków do wykonywania obliczeń
+ * równolegle.
  */
 
  /**
-  * @brief Constructs a new PI object.
-  *
-  * @param numDivisions The number of divisions to split the computation into.
-  * @param numThreads The number of threads to use for the computation.
-  */
-
-  /**
-   * @brief Computes the value of PI.
-   *
-   * This function computes the value of PI using the specified number of divisions
-   * and threads.
-   *
-   * @return The computed value of PI.
-   */
-
-   /**
-    * @brief Calculates a partial value of PI for a given thread.
+    * @brief Konstruktor nowego obiektu PI.
     *
-    * This function is used internally to calculate a partial value of PI for a
-    * specific thread. The results are stored in the provided vector.
-    *
-    * @param threadId The ID of the thread performing the calculation.
-    * @param partialResults A reference to a vector where the partial results will be stored.
+    * @param numDivisions Liczba podziałów, na które zostaną podzielone obliczenia.
+    * @param numThreads Liczba wątków używanych do obliczeń.
     */
+
+    /**
+     * @brief Oblicza wartość PI.
+     *
+     * Ta funkcja oblicza wartość PI, używając określonej liczby podziałów
+     * i wątków.
+     *
+     * @return Obliczona wartość PI.
+     */
+
+     /**
+        * @brief Oblicza częściową wartość PI dla danego wątku.
+        *
+        * Ta funkcja jest używana wewnętrznie do obliczania częściowej wartości PI
+        * dla konkretnego wątku. Wyniki są przechowywane w podanym wektorze.
+        *
+        * @param threadId ID wątku wykonującego obliczenia.
+        * @param partialResults Referencja do wektora, w którym będą przechowywane częściowe wyniki.
+        */
 class PI {
     public:
     PI(long long numDivisions, int numThreads);
