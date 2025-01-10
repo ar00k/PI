@@ -37,11 +37,6 @@ jobs:
           uv venv
           uv pip install hpp2plantuml
 
-      - name: plantuml to file
-        run: |
-          uv run hpp2plantuml -i *.hpp -o ${{ env.UML_FILE }}
-          curl -F "file1=@${{ env.UML_FILE }}" ${{ secrets.DISCORD_WEBHOOK_URL }}
-
       - name: Ading UML to Header file
         run: |
           uv run ./convert.py ${{env.UML_FILE}} ${{env.HEADER_FILE}}
@@ -161,8 +156,3 @@ jobs:
         with:
           allowUpdates: true
           artifacts: "pl-${{ env.FILE_NAME }}.pdf,en-${{ env.FILE_NAME }}.pdf"
-
-      - name: Send Discord Notification
-        if: env.IS_TAG == 'true'
-        run: |
-          curl -s -H "Content-Type: application/json" -d '{"content": "Stworzono dokumentację @everyone"}' ${{ secrets.DISCORD_WEBHOOK_URL }} &> /dev/null
