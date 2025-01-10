@@ -4,7 +4,7 @@
 #include <vector>
 #include <thread>
 
-/**
+/**g
  * @class PI
  * @brief Klasa do obliczania wartości PI za pomocą wielu wątków.
  *
